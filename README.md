@@ -264,11 +264,11 @@ Add following to MainApplication.java
 ### Imperative API
 
 Whenever you want to use it within React Native code now you can:
-`import Orientation from 'react-native-orientation-locker';`
+`import Orientation from '@5stones/react-native-orientation-locker';`
 
 ```js
 
-import Orientation from 'react-native-orientation-locker';
+import Orientation from '@5stones/react-native-orientation-locker';
 
 
   _onOrientationDidChange = (orientation) => {
