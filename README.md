@@ -1,5 +1,5 @@
 # react-native-orientation-locker
-[![npm](https://img.shields.io/npm/v/react-native-orientation-locker.svg?style=flat-square)](https://www.npmjs.com/package/react-native-orientation-locker)
+[![npm](https://img.shields.io/npm/v/react-native-orientation-locker.svg?style=flat-square)](https://www.npmjs.com/package/@5stones/react-native-orientation-locker)
 
 A react-native module that can listen on orientation changing of device, get current orientation, lock to preferred orientation. (cross-platform support)
 
