@@ -1,6 +1,6 @@
 {
     "name": "@5stones/react-native-orientation-locker",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "summary": "A react-native module that can listen on orientation changing of device",
     "description": "A react-native module that can listen on orientation changing of device, get current orientation, lock to preferred orientation.",
     "homepage": "https://github.com/5-stones/react-native-orientation-locker",
@@ -26,8 +26,7 @@
     "bugs": {
         "url": "https://github.com/5-stones/react-native-orientation-locker/issues"
     },
-    "dependencies": {
-    },
+    "dependencies": {},
     "peerDependencies": {
         "react": ">=16.13.1",
         "react-native": ">=0.63.2",
