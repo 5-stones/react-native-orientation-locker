@@ -171,23 +171,40 @@ static UIInterfaceOrientationMask _orientationMask = UIInterfaceOrientationMaskA
     if (@available(iOS 16.0, *)) {
         UIWindowScene *windowScene = [self getWindowScene];
         if (windowScene != nil) {
+            // Notify the topmost VC that supported orientations changed.
+            UIViewController *topVC = windowScene.keyWindow.rootViewController;
+            while (topVC.presentedViewController) {
+                topVC = topVC.presentedViewController;
+            }
+            [topVC setNeedsUpdateOfSupportedInterfaceOrientations];
+
             UIWindowSceneGeometryPreferencesIOS *geometryPreferences = [[UIWindowSceneGeometryPreferencesIOS alloc] initWithInterfaceOrientations:mask];
             [windowScene requestGeometryUpdateWithPreferences:geometryPreferences errorHandler:^(NSError * _Nonnull error) {
-#if DEBUG
                 if (error) {
-                    NSLog(@"Failed to update geometry with UIInterfaceOrientationMask: %@", error);
+                    NSLog(@"[Orientation] requestGeometryUpdate error: %@", error);
                 }
-#endif
             }];
+
+            // On iOS 16+, orientationDidChange is normally only sent from the
+            // UIDeviceOrientationDidChangeNotification handler. When we force a
+            // rotation while the physical device stays still, that notification
+            // never fires. Schedule a delayed check to manually emit the event.
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                UIInterfaceOrientation currentOrientation = [self getInterfaceOrientation];
+                if (currentOrientation != UIInterfaceOrientationUnknown && currentOrientation != self->_lastOrientation) {
+                    [self sendEventWithName:@"orientationDidChange" body:@{@"orientation": [self getOrientationStr:currentOrientation]}];
+                    self->_lastOrientation = currentOrientation;
+                }
+            });
         }
     } else {
         UIDevice* currentDevice = [UIDevice currentDevice];
-        
+
         [currentDevice setValue:@(UIInterfaceOrientationUnknown) forKey:orientation];
         [currentDevice setValue:@(newOrientation) forKey:orientation];
+
+        [UIViewController attemptRotationToDeviceOrientation];
     }
-    
-    [UIViewController attemptRotationToDeviceOrientation];
         
     [self sendEventWithName:@"lockDidChange" body:@{orientation: [self getOrientationStr:newOrientation]}];
 
